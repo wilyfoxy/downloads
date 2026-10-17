@@ -1,187 +1,496 @@
 <!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#101010">
+    <title>Лисичка-сестричка</title>
 
-<html lang="ru"> <head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0"> <meta name="theme-color" content="#101010"> <title>Лисичка-сестричка</title>
-
-<style>
-    * {
-        box-sizing: border-box;
-    }
-
-    body {
-        position: relative;
-        isolation: isolate;
-        min-height: 100vh;
-        margin: 0;
-        overflow-x: hidden;
-        background: #101010;
-        color: #ffffff;
-        font-family: Arial, Helvetica, sans-serif;
-    }
-
-    .background-video {
-        position: fixed;
-        inset: 0;
-        z-index: -2;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        object-position: center;
-        pointer-events: none;
-    }
-
-    .background-overlay {
-        position: fixed;
-        inset: 0;
-        z-index: -1;
-        background: rgba(0, 0, 0, 0.15);
-    }
-
-    .page {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: flex-start;
-        min-height: 100vh;
-        padding: 0 24px 40px;
-        text-align: center;
-    }
-
-    .subtitle {
-        max-width: 800px;
-        margin: 0 0 24px;
-        padding-top: 17vh;
-        color: rgba(255, 255, 255, 0.85);
-        font-size: 12px;
-        font-weight: 600;
-        letter-spacing: 3px;
-        line-height: 1.8;
-        text-transform: uppercase;
-    }
-
-    h1 {
-        max-width: 1000px;
-        margin: 0;
-        font-family: Arial, Helvetica, sans-serif;
-        font-size: clamp(38px, 8vw, 88px);
-        font-weight: 900;
-        line-height: 1.05;
-        letter-spacing: -2px;
-        text-transform: uppercase;
-        text-shadow: 0 4px 30px rgba(0, 0, 0, 0.45);
-    }
-
-    .downloads {
-        display: flex;
-        justify-content: center;
-        flex-wrap: wrap;
-        gap: 14px;
-        width: 100%;
-        margin-top: 320px;
-    }
-
-    .download-button {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        min-width: 230px;
-        min-height: 56px;
-        padding: 16px 24px;
-        border: 1px solid #ffffff;
-        background: #ffffff;
-        color: #111111;
-        font-size: 12px;
-        font-weight: 800;
-        letter-spacing: 1.5px;
-        text-decoration: none;
-        transition:
-            background 0.25s ease,
-            color 0.25s ease,
-            transform 0.25s ease;
-    }
-
-    .download-button:hover {
-        transform: translateY(-3px);
-        background: transparent;
-        color: #ffffff;
-    }
-
-@media (max-width: 560px) {
-    .subtitle {
-        max-width: 330px;
-        font-size: 10px;
-        letter-spacing: 2px;
-    }
-
-    h1 {
-        font-size: clamp(34px, 10vw, 54px);
-        letter-spacing: -2px;
-    }
-
-    .background-video {
-        object-position: 48% 65%;
-    }
-
-    .downloads {
-        flex-direction: row;
-        align-items: center;
-        justify-content: center;
-        flex-wrap: nowrap;
-        gap: 10px;
-        margin-top: 230px;
-    }
-
-    .download-button {
-        flex: 1;
-        min-width: 0;
-        max-width: 330px;
-        min-height: 56px;
-        padding: 14px 8px;
-        font-size: 10px;
-        letter-spacing: 0.5px;
-    }
-}
-
-    @media (prefers-reduced-motion: reduce) {
-        .download-button {
-            transition: none;
+    <style>
+        * {
+            box-sizing: border-box;
         }
-    }
-</style>
 
+        body {
+            position: relative;
+            isolation: isolate;
+            min-height: 100vh;
+            margin: 0;
+            overflow-x: hidden;
+            background: #101010;
+            color: #ffffff;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body.modal-open {
+            overflow: hidden;
+        }
+
+        .background-video {
+            position: fixed;
+            inset: 0;
+            z-index: -2;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+            pointer-events: none;
+        }
+
+        .background-overlay {
+            display: none;
+        }
+
+        .page {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            min-height: 100vh;
+            padding: 0 24px 40px;
+            text-align: center;
+        }
+
+        .subtitle {
+            max-width: 800px;
+            margin: 0 0 24px;
+            padding-top: 17vh;
+            color: rgba(255, 255, 255, 0.85);
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 3px;
+            line-height: 1.8;
+            text-transform: uppercase;
+        }
+
+        h1 {
+            max-width: 1000px;
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: clamp(38px, 8vw, 88px);
+            font-weight: 900;
+            line-height: 1.05;
+            letter-spacing: -2px;
+            text-transform: uppercase;
+            text-shadow: 0 4px 30px rgba(0, 0, 0, 0.45);
+        }
+
+        .downloads {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 14px;
+            width: 100%;
+            margin-top: 320px;
+        }
+
+        .download-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 230px;
+            min-height: 56px;
+            padding: 16px 24px;
+            border: 1px solid #ffffff;
+            background: #ffffff;
+            color: #111111;
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 1.5px;
+            text-decoration: none;
+            transition:
+                background 0.25s ease,
+                color 0.25s ease,
+                transform 0.25s ease;
+        }
+
+        .download-button:hover {
+            transform: translateY(-3px);
+            background: transparent;
+            color: #ffffff;
+        }
+
+        .about-button {
+            min-width: 190px;
+            min-height: 48px;
+            margin-top: 16px;
+            padding: 14px 24px;
+            border: 1px solid rgba(255, 255, 255, 0.75);
+            background: rgba(16, 16, 16, 0.25);
+            color: #ffffff;
+            font-family: inherit;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition:
+                background 0.25s ease,
+                color 0.25s ease,
+                border-color 0.25s ease;
+        }
+
+        .about-button:hover {
+            background: #ffffff;
+            color: #111111;
+            border-color: #ffffff;
+        }
+
+        /* Затемнение появляется только при открытии окна */
+
+        .modal {
+            position: fixed;
+            inset: 0;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.68);
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transition:
+                opacity 0.3s ease,
+                visibility 0.3s ease;
+        }
+
+        .modal.is-open {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+        }
+
+        /* Окно с текстом */
+
+        .modal-content {
+            position: relative;
+            width: 100%;
+            max-width: 560px;
+            max-height: 85vh;
+            overflow-y: auto;
+            padding: 44px 40px 38px;
+            border: 1px solid rgba(255, 255, 255, 0.45);
+            background: rgba(16, 16, 16, 0.90);
+            text-align: left;
+            transform: translateY(12px);
+            transition: transform 0.3s ease;
+        }
+
+        .modal.is-open .modal-content {
+            transform: translateY(0);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 12px;
+            right: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            padding: 0;
+            border: none;
+            background: transparent;
+            color: rgba(255, 255, 255, 0.7);
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 30px;
+            font-weight: 300;
+            cursor: pointer;
+            transition:
+                color 0.2s ease,
+                transform 0.2s ease;
+        }
+
+        .modal-close:hover {
+            color: #ffffff;
+            transform: rotate(90deg);
+        }
+
+        .modal-title {
+            margin: 0 0 10px;
+            font-size: clamp(25px, 5vw, 32px);
+            font-weight: 800;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .modal-subtitle {
+            margin: 0 0 28px;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .modal-divider {
+            width: 48px;
+            height: 2px;
+            margin-bottom: 26px;
+            background: #ffffff;
+        }
+
+        .modal-section {
+            margin-bottom: 26px;
+        }
+
+        .modal-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .modal-section h3 {
+            margin: 0 0 12px;
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .modal-section p {
+            margin: 0;
+            color: rgba(255, 255, 255, 0.85);
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 1.85;
+        }
+
+        @media (max-width: 560px) {
+            .subtitle {
+                max-width: 330px;
+                font-size: 10px;
+                letter-spacing: 2px;
+            }
+
+            h1 {
+                font-size: clamp(34px, 10vw, 54px);
+                letter-spacing: -2px;
+            }
+
+            .background-video {
+                object-position: 48% 65%;
+            }
+
+            .downloads {
+                flex-direction: row;
+                align-items: center;
+                justify-content: center;
+                flex-wrap: nowrap;
+                gap: 10px;
+                margin-top: 230px;
+            }
+
+            .download-button {
+                flex: 1;
+                min-width: 0;
+                max-width: 330px;
+                min-height: 56px;
+                padding: 14px 8px;
+                font-size: 10px;
+                letter-spacing: 0.5px;
+            }
+
+            .about-button {
+                min-width: 170px;
+                min-height: 46px;
+                margin-top: 14px;
+                font-size: 10px;
+            }
+
+            .modal {
+                padding: 16px;
+            }
+
+            .modal-content {
+                max-height: 88vh;
+                padding: 42px 24px 28px;
+            }
+
+            .modal-subtitle {
+                margin-bottom: 24px;
+            }
+
+            .modal-section p {
+                font-size: 13px;
+                line-height: 1.8;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .download-button,
+            .about-button,
+            .modal,
+            .modal-content,
+            .modal-close {
+                transition: none;
+            }
+        }
+    </style>
 </head>
 
-<body> <video class="background-video" autoplay muted loop playsinline preload="auto"> <source src="ПОБЕДА.mp4" type="video/mp4"> </video>
+<body>
+    <video
+        class="background-video"
+        autoplay
+        muted
+        loop
+        playsinline
+        preload="auto"
+    >
+        <source src="ПОБЕДА.mp4" type="video/mp4">
+    </video>
 
-<div class="background-overlay"></div>
+    <main class="page">
+        <p class="subtitle">
+            Фанатская модификация визуальной новеллы «Зайчик»
+        </p>
 
-<main class="page">
-    <p class="subtitle">
-        Фанатская модификация визуальной новеллы «Зайчик»
-    </p>
+        <h1>Лисичка-сестричка</h1>
 
-    <h1>Лисичка-сестричка</h1>
+        <div class="downloads">
+            <a
+                class="download-button"
+                href="https://drive.google.com/file/d/11utvvCVy-EveANxRqg0TmImYi5lou-iv/view?usp=drive_link"
+                target="_blank"
+                rel="noopener noreferrer"
+            >
+                СКАЧАТЬ ДЛЯ WINDOWS
+            </a>
 
-    <div class="downloads">
-        <a
-            class="download-button"
-            href="https://drive.google.com/file/d/11utvvCVy-EveANxRqg0TmImYi5lou-iv/view?usp=drive_link"
-            target="_blank"
-            rel="noopener noreferrer"
+            <a
+                class="download-button"
+                href="https://drive.google.com/file/d/17pQ45EfAcNYR23Im6gwCobaIkyF22BVT/view?usp=drive_link"
+                target="_blank"
+                rel="noopener noreferrer"
+            >
+                СКАЧАТЬ НА ANDROID
+            </a>
+        </div>
+
+        <button
+            class="about-button"
+            id="aboutButton"
+            type="button"
+            aria-haspopup="dialog"
+            aria-controls="aboutModal"
+            aria-expanded="false"
         >
-            СКАЧАТЬ ДЛЯ WINDOWS
-        </a>
+            ОБ ИГРЕ
+        </button>
+    </main>
 
-        <a
-            class="download-button"
-            href="https://drive.google.com/file/d/17pQ45EfAcNYR23Im6gwCobaIkyF22BVT/view?usp=drive_link"
-            target="_blank"
-            rel="noopener noreferrer"
+    <div
+        class="modal"
+        id="aboutModal"
+        aria-hidden="true"
+    >
+        <section
+            class="modal-content"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="modalTitle"
+            tabindex="-1"
         >
-            СКАЧАТЬ НА ANDROID
-        </a>
+            <button
+                class="modal-close"
+                id="closeModal"
+                type="button"
+                aria-label="Закрыть окно"
+            >
+                &times;
+            </button>
+
+            <h2 class="modal-title" id="modalTitle">
+                Об игре
+            </h2>
+
+            <p class="modal-subtitle">
+                Wily Foxy · Лисичка-сестричка
+            </p>
+
+            <div class="modal-divider"></div>
+
+            <div class="modal-section">
+                <h3>О сюжете</h3>
+
+                <p>
+                    «Лисичка-сестричка» — фанатская модификация
+                    визуальной новеллы «Зайчик», рассказывающая
+                    альтернативную историю от лица оригинального
+                    фанатского персонажа. Знакомый мир раскрывается
+                    с новой стороны — через её восприятие и события
+                    её собственной истории.
+                </p>
+            </div>
+
+            <div class="modal-section">
+                <h3>Формат истории</h3>
+
+                <p>
+                    Это линейная история с единым сюжетом и одной
+                    концовкой. В игре нет выборов, разветвлённых
+                    сюжетных линий или альтернативных финалов.
+                    Повествование последовательно ведёт от начала
+                    до конца, позволяя целиком погрузиться в историю.
+                </p>
+            </div>
+        </section>
     </div>
 
-    </div>
-</main>
+    <script>
+        const aboutButton = document.getElementById("aboutButton");
+        const aboutModal = document.getElementById("aboutModal");
+        const modalContent = aboutModal.querySelector(".modal-content");
+        const closeModalButton = document.getElementById("closeModal");
 
-</body> </html>
+        function openAboutModal() {
+            aboutModal.classList.add("is-open");
+            aboutModal.setAttribute("aria-hidden", "false");
+            aboutButton.setAttribute("aria-expanded", "true");
+            document.body.classList.add("modal-open");
+            closeModalButton.focus();
+        }
+
+        function closeAboutModal() {
+            aboutModal.classList.remove("is-open");
+            aboutModal.setAttribute("aria-hidden", "true");
+            aboutButton.setAttribute("aria-expanded", "false");
+            document.body.classList.remove("modal-open");
+            aboutButton.focus();
+        }
+
+        aboutButton.addEventListener("click", openAboutModal);
+
+        closeModalButton.addEventListener("click", closeAboutModal);
+
+        aboutModal.addEventListener("click", function(event) {
+            if (event.target === aboutModal) {
+                closeAboutModal();
+            }
+        });
+
+        document.addEventListener("keydown", function(event) {
+            if (!aboutModal.classList.contains("is-open")) {
+                return;
+            }
+
+            if (event.key === "Escape") {
+                closeAboutModal();
+            }
+
+            if (event.key === "Tab") {
+                const focusableElements = [
+                    closeModalButton
+                ];
+
+                const firstElement = focusableElements[0];
+
+                if (event.shiftKey && document.activeElement === firstElement) {
+                    event.preventDefault();
+                    modalContent.focus();
+                }
+            }
+        });
+    </script>
+</body>
+</html>
